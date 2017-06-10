@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
                     } else if (mode == MODE_ZOOM) {
                         float endDis = distance(event);
                         if (endDis > 10f) {
-                            float scale=endDis;
+                            float scale=endDis/startDis;
                             matrix.set(currrentMatrix);
                             matrix.postScale(scale, scale, midPoint.x, midPoint.y);
                         }
@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
                     mode=0;
                     break;
                 case MotionEvent.ACTION_POINTER_UP:
+                    mode=0;
+                case MotionEvent.ACTION_POINTER_DOWN:
                     mode = MODE_ZOOM;
                     startDis = distance(event);
                     if (startDis > 10f) {
@@ -69,17 +71,18 @@ public class MainActivity extends Activity {
             return true;
         }
 
+        private float distance(MotionEvent event) {
+            float dx = event.getX(1) - event.getX(0);
+            float dy = event.getY(1) - event.getY(0);
+            return (float)Math.sqrt(dx * dx + dy * dy);
+        }
         private PointF mid(MotionEvent event) {
             float midX = (event.getX(1) + event.getX(0)) / 2;
             float midY = (event.getY(1) + event.getY(0)) / 2;
             return new PointF(midX, midY);
         }
 
-        private float distance(MotionEvent event) {
-            float dx = event.getX(1) - event.getX(0);
-            float dy = event.getY(1) - event.getY(0);
-            return (float)Math.sqrt(dx * dx + dy * dy);
-        }
+
     }
 
 }
